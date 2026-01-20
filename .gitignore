@@ -1,9 +1,13 @@
 # Docker
 data/
 !data/README.md
-docker-compose.override.yml
 .env
 *.env.local
+docker-compose.override.yml
+.dockerignore
+Dockerfile
+docker-compose.*.yml
+!docker-compose.yml
 
 # Airflow
 airflow/logs/
@@ -13,12 +17,25 @@ airflow/webserver_config.py
 # PostgreSQL
 postgres_data/
 
-# MinIO
-minio_data/
-
 # Superset
-superset.db
-superset_config.py
+superset_data/
+apache-superset-create-admin-user.txt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
 # Python
 __pycache__/
@@ -51,24 +68,22 @@ ENV/
 env.bak/
 venv.bak/
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# DBT
+# dbt
 dbt/target/
-dbt/dbt_project.yml
 dbt/logs/
 dbt/.dbt/
+
+# Логи
+*.log
+!airflow/logs/
+
+# Временные файлы
+temp/
+tmp/
+*.tmp
+*.temp
+test_data/
+
+# MiniO
+/minio/data/
+/minio/.minio.sys/
