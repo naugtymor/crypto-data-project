@@ -16,6 +16,7 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR}/dags:/opt/airflow/dags
     - ${AIRFLOW_PROJ_DIR}/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR}/plugins:/opt/airflow/plugins
+    - ./requirements.txt:/opt/airflow/requirements.txt
   user: "${AIRFLOW_UID}:0"
   depends_on:
     airflow-postgres:
@@ -231,7 +232,7 @@ services:
       - crypto-network
 
   dbt:
-    image: python:3.9-slim
+    image: python:3.12-slim
     container_name: dbt
     working_dir: /dbt
     environment:
