@@ -24,7 +24,7 @@ x-airflow-common:
 
 services:
   postgres-dwh:
-    image: postgres:13
+    image: ${DWH_POSTGRES_IMAGE_NAME}
     container_name: postgres-dwh
     environment:
       POSTGRES_USER: ${DWH_POSTGRES_USER}
@@ -43,7 +43,7 @@ services:
       - crypto-network
 
   minio:
-    image: minio/minio:RELEASE.2025-02-18T16-25-55Z
+    image: ${MINIO_IMAGE_NAME}
     container_name: minio
     restart: always
     volumes:
@@ -64,7 +64,7 @@ services:
       - crypto-network
 
   airflow-postgres:
-    image: postgres:13
+    image: ${DWH_POSTGRES_IMAGE_NAME}
     container_name: airflow-postgres
     environment:
       POSTGRES_USER: ${AIRFLOW_POSTGRES_USER}
@@ -124,7 +124,6 @@ services:
   airflow-init:
     <<: *airflow-common
     entrypoint: /bin/bash
-    # yamllint disable rule:line-length
     command:
       - -c
       - |
@@ -232,7 +231,7 @@ services:
       - crypto-network
 
   dbt:
-    image: python:3.12-slim
+    image: ${DBT_IMAGE_NAME}
     container_name: dbt
     working_dir: /dbt
     environment:
