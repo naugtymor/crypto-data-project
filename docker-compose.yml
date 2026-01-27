@@ -12,11 +12,11 @@ x-airflow-common:
     AIRFLOW__CORE__FERNET_KEY: ${AIRFLOW__CORE__FERNET_KEY}
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:- duckdb==1.2.2 pendulum==3.1.0 requests==2.31.0 pandas==2.1.1}
   volumes:
     - ${AIRFLOW_PROJ_DIR}/dags:/opt/airflow/dags
     - ${AIRFLOW_PROJ_DIR}/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR}/plugins:/opt/airflow/plugins
-    - ./requirements.txt:/opt/airflow/requirements.txt
   user: "${AIRFLOW_UID}:0"
   depends_on:
     airflow-postgres:
@@ -172,7 +172,6 @@ services:
         mkdir -p /opt/airflow/{logs,dags,plugins}
         chown -R "${AIRFLOW_UID}:0" /opt/airflow/{logs,dags,plugins}
         exec /entrypoint airflow version
-    # yamllint enable rule:line-length
     environment:
       <<: *airflow-common-env
       _AIRFLOW_DB_MIGRATE: 'true'
