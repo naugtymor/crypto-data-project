@@ -87,3 +87,4 @@ test_data/
 # MiniO
 /minio/data/
 /minio/.minio.sys/
+/minio/prod
