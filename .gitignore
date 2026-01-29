@@ -5,9 +5,7 @@ data/
 *.env.local
 docker-compose.override.yml
 .dockerignore
-Dockerfile
 docker-compose.*.yml
-!docker-compose.yml
 
 # Airflow
 airflow/logs/
@@ -19,7 +17,6 @@ postgres_data/
 
 # Superset
 superset_data/
-apache-superset-create-admin-user.txt
 
 # IDE
 .vscode/
@@ -62,7 +59,7 @@ share/python-wheels/
 MANIFEST
 
 # Virtual Environment
-venv/
+.venv/
 env/
 ENV/
 env.bak/
@@ -72,10 +69,10 @@ venv.bak/
 dbt/target/
 dbt/logs/
 dbt/.dbt/
+dbt/dbt_packages/
 
 # Логи
 *.log
-!airflow/logs/
 
 # Временные файлы
 temp/
