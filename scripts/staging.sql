@@ -1,10 +1,14 @@
 CREATE SCHEMA IF NOT EXISTS staging;
+CREATE SCHEMA IF NOT EXISTS mart;
 
+
+drop table staging.stg_coingecko_markets 
 CREATE TABLE IF NOT EXISTS staging.stg_coingecko_markets (
     load_date DATE NOT NULL,
-    id TEXT NOT NULL,                  -- coin id (bitcoin)
+    id TEXT NOT NULL,
     symbol TEXT,
     name TEXT,
+    image TEXT,
     current_price NUMERIC,
     market_cap NUMERIC,
     market_cap_rank INT,
@@ -25,11 +29,17 @@ CREATE TABLE IF NOT EXISTS staging.stg_coingecko_markets (
     atl NUMERIC,
     atl_change_percentage NUMERIC,
     atl_date TIMESTAMP,
-    roi JSONB,                          -- ⚠️ оставляем как есть
+    roi INT,
     last_updated TIMESTAMP,
-    price_change_percentage_1h NUMERIC,
-    price_change_percentage_7d NUMERIC,
+    price_change_percentage_1h_in_currency NUMERIC,
+    price_change_percentage_24h_in_currency NUMERIC,
+    price_change_percentage_7d_in_currency NUMERIC,
+    roi_times NUMERIC,
+    roi_currency TEXT,
+    roi_percentage NUMERIC,
     inserted_at TIMESTAMP DEFAULT now(),
     CONSTRAINT pk_stg_coingecko_markets
         PRIMARY KEY (load_date, id)
 );
+
+select * from staging.stg_coingecko_markets scm where id='bitcoin'
