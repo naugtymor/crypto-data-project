@@ -1,0 +1,43 @@
+version: 2
+
+models:
+
+  - name: dim_coin
+    description: "Dimension table with latest snapshot per coin"
+    columns:
+      - name: coin_id
+        description: "Business key of coin"
+        tests:
+          - not_null
+          - unique
+      - name: symbol
+        tests:
+          - not_null
+      - name: name
+        tests:
+          - not_null
+
+  - name: fct_market_daily
+    description: "Daily market snapshot per coin"
+    columns:
+      - name: load_date
+        tests:
+          - not_null
+      - name: coin_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_coin')
+              field: coin_id
+      - name: price
+        tests:
+          - not_null
+      - name: market_cap
+        tests:
+          - not_null
+      - name: volume
+        tests:
+          - not_null
+    tests:
+      - unique:
+          combination_of: ['load_date', 'coin_id']

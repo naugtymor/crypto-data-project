@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: stg_coingecko_markets
+    description: "Staging model for CoinGecko markets"
+    columns:
+      - name: load_date
+        tests:
+          - not_null
+      - name: coin_id
+        tests:
+          - not_null
