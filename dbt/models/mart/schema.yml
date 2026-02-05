@@ -23,21 +23,30 @@ models:
       - name: load_date
         tests:
           - not_null
+
       - name: coin_id
         tests:
           - not_null
           - relationships:
-              to: ref('dim_coin')
-              field: coin_id
+              arguments:
+                to: ref('dim_coin')
+                field: coin_id
+
       - name: price
         tests:
           - not_null
+
       - name: market_cap
         tests:
           - not_null
+
       - name: volume
         tests:
           - not_null
+
     tests:
-      - unique:
-          combination_of: ['load_date', 'coin_id']
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - load_date
+              - coin_id

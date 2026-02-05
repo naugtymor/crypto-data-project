@@ -239,6 +239,7 @@ services:
       POSTGRES_USER: ${DBT_POSTGRES_USER}
       POSTGRES_PASSWORD: ${DBT_POSTGRES_PASSWORD}
       POSTGRES_DB: ${DBT_POSTGRES_DB}
+      DBT_PROFILES_DIR: /dbt/.dbt
     volumes:
       - ./dbt:/dbt
     depends_on:
