@@ -1,3 +1,8 @@
+{{ config(
+    materialized='incremental',
+    unique_key=['load_date', 'coin_id']
+) }}
+
 with base as (
 
     select
@@ -19,6 +24,12 @@ with base as (
         last_updated,
         ingested_at
     from {{ ref('stg_coingecko_markets') }}
+
+    {% if is_incremental() %}
+        where load_date > (
+            select max(load_date) from {{ this }}
+        )
+    {% endif %}
 
 )
 
