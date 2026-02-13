@@ -50,3 +50,17 @@ models:
             combination_of_columns:
               - load_date
               - coin_id
+
+  - name: vw_market_daily_enriched
+    description: "Fact + Dim join for BI layer"
+    columns:
+      - name: load_date
+        tests:
+          - not_null
+      - name: coin_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_coin')
+                field: coin_id
