@@ -12,11 +12,12 @@ x-airflow-common:
     AIRFLOW__CORE__FERNET_KEY: ${AIRFLOW__CORE__FERNET_KEY}
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
-    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:- duckdb==1.2.2 pendulum==3.1.0 requests==2.31.0 pandas==2.1.1 s3fs sqlalchemy psycopg2-binary}
+    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:- duckdb==1.2.2 pendulum==3.1.0 requests==2.31.0 pandas==2.1.1 s3fs sqlalchemy psycopg2-binary apache-airflow-providers-docker==3.3.0}
   volumes:
     - ${AIRFLOW_PROJ_DIR}/dags:/opt/airflow/dags
     - ${AIRFLOW_PROJ_DIR}/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR}/plugins:/opt/airflow/plugins
+    - /var/run/docker.sock:/var/run/docker.sock
   user: "${AIRFLOW_UID}:0"
   depends_on:
     airflow-postgres:
@@ -235,7 +236,10 @@ services:
       - crypto-network
 
   dbt:
-    build: .
+    build:
+      context: ./dbt
+      dockerfile: Dockerfile.dbt
+    image: crypto-data-project-dbt
     container_name: dbt
     working_dir: /dbt
     environment:
@@ -245,8 +249,6 @@ services:
       POSTGRES_PASSWORD: ${DBT_POSTGRES_PASSWORD}
       POSTGRES_DB: ${DBT_POSTGRES_DB}
       DBT_PROFILES_DIR: /dbt/.dbt
-    volumes:
-      - ./dbt:/dbt
     depends_on:
       postgres-dwh:
         condition: service_healthy

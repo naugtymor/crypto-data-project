@@ -43,12 +43,10 @@ def load_s3_to_staging(**context):
     load_date = get_load_date(**context)
     logging.info(f"💻 Start staging load for date: {load_date}")
 
-    # Подключение к Postgres через SQLAlchemy
     engine = create_engine(
         f"postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
     )
 
-    # Путь к Parquet в S3
     s3_path = f"s3://{BUCKET}/raw/coingecko/daily/{load_date}/{load_date}.parquet"
 
     storage_options = {
@@ -57,7 +55,6 @@ def load_s3_to_staging(**context):
         "client_kwargs": {"endpoint_url": f"http://{MINIO_ENDPOINT}"},
     }
 
-    # Чтение parquet
     logging.info(f"📥 Reading Parquet from S3: {s3_path}")
     df = pd.read_parquet(s3_path, engine="pyarrow", storage_options=storage_options)
     df["load_date"] = load_date
