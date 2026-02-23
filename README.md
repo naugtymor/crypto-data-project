@@ -1,6 +1,6 @@
-# Crypto Data Pipeline - End-to-End Data Engineering Project
+# Crypto Data Pipeline (End-to-End Data Engineering Project)
 
-## 📋 Project Overview
+## 📋 Overview
 This project implements a fully automated ETL pipeline for cryptocurrency market data, ingesting raw data from CoinGecko API, transforming it into structured staging and mart layers, and providing BI-ready datasets for dashboards.
 
 The pipeline is production-ready, containerized with Docker, orchestrated with Apache Airflow, and includes analytics and visualization with Apache Superset.
@@ -17,7 +17,7 @@ The pipeline is production-ready, containerized with Docker, orchestrated with A
 ## 🛠️ Tech Stack
 | Layer | Technology |
 |-------|------------|
-| Orchestration | Apache Airflow (LocalExecutor) |
+| Orchestration | Apache Airflow  |
 | Storage | MinIO (S3), PostgreSQL |
 | Transformation | dbt (Data Build Tool) |
 | BI / Visualization | Apache Superset |
@@ -53,7 +53,8 @@ The pipeline consists of **3 main layers**:
 - Fetches daily cryptocurrency market data from **CoinGecko API**.
 - Stores JSON data as **Parquet files in MinIO**.
 - Example DAG in Airflow:  
-  ![Airflow Raw Layer DAG](docs/images/airflow_raw_dag.png)
+
+![Airflow Raw Layer DAG](docs/dag_1.png)
 
 ### 2. Staging Layer
 - DAG: `load_coingecko_staging_daily`
@@ -61,7 +62,8 @@ The pipeline consists of **3 main layers**:
 - Loads data into **PostgreSQL staging tables** (`stg_coingecko_markets`).
 - Performs basic validation and logs row counts.
 - Example staging DAG run:  
-  ![Airflow Staging DAG](docs/images/airflow_staging_dag.png)
+
+![Airflow Staging DAG](docs/dag_2.png)
 
 ### 3. Mart Layer (Transformation)
 - DAG: `transform_crypto_mart_daily`
@@ -70,8 +72,9 @@ The pipeline consists of **3 main layers**:
   - Fact table: `fct_market_daily`
   - Dimension table: `dim_coin`
 - Creates enriched BI-ready view: `vw_market_daily_enriched`.
-- Example dbt run:  
-  ![dbt Run](docs/images/dbt_run.png)
+- Example DAG with dbt run:  
+
+![dbt Run](docs/dag_3.png)
 
 ---
 
@@ -82,8 +85,9 @@ The pipeline consists of **3 main layers**:
   - Price trends
   - Market capitalization analysis
   - Volume and supply insights
-- Example Superset dashboard:  
-  ![Superset Dashboard](docs/images/superset_dashboard.png)
+- Example Superset dashboard:
+
+![Superset Dashboard](docs/superset_ui.png)
 
 ---
 ## 🚀 Quick Start
@@ -108,10 +112,6 @@ cp .env.example .env
 3. Start the full stack:
 ```bash
 docker-compose up -d
-```
-4. Initialize Airflow (first time only):
-```bash
-docker-compose run --rm airflow-init
 ```
 
 ### Access Services
