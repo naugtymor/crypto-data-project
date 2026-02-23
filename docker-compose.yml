@@ -204,7 +204,7 @@ services:
   superset:
     build:
       context: .
-      dockerfile: Dockerfile.superset
+      dockerfile: docker/Dockerfile.superset
     container_name: superset
     command: >
       bash -c "
@@ -237,8 +237,8 @@ services:
 
   dbt:
     build:
-      context: ./dbt
-      dockerfile: Dockerfile.dbt
+      context: .
+      dockerfile: docker/Dockerfile.dbt
     image: crypto-data-project-dbt
     container_name: dbt
     working_dir: /dbt
