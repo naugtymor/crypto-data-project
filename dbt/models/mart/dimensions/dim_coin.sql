@@ -9,7 +9,6 @@ with ranked as (
         atl,
         atl_date,
         load_date,
-
         row_number() over (
             partition by coin_id
             order by load_date desc

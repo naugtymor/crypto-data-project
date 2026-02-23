@@ -15,12 +15,23 @@ BUCKET = "prod"
 LAYER = "raw"
 SOURCE = "coingecko"
 
-# MinIO
+LONG_DESCRIPTION = """
+# DAG: Load daily crypto data from MinIO into Postgres staging layer
+This DAG performs the following steps:
+
+1. Waits for the raw CoinGecko data to be loaded into S3/MinIO.
+2. Reads the daily Parquet file for 10 major cryptocurrencies.
+3. Normalizes and cleans column names.
+4. Loads the data into the Postgres staging table `stg_coingecko_markets`.
+5. Logs the number of rows processed.
+"""
+
+SHORT_DESCRIPTION = "Load daily CoinGecko data from S3/MinIO into Postgres staging table"
+
 MINIO_ACCESS_KEY = Variable.get("minio_access_key", default_var="aZzwPOxDKLSbA4SJmxjH")
 MINIO_SECRET_KEY = Variable.get("minio_secret_key", default_var="hrh9KUgEoVkE2MKOCkAexPH023M3ZCqaohZ8VwPh")
 MINIO_ENDPOINT = Variable.get("minio_endpoint", default_var="minio:9000")
 
-# Postgres
 POSTGRES_USER = Variable.get("dwh_postgres_user", default_var="postgres")
 POSTGRES_PASSWORD = Variable.get("dwh_postgres_password", default_var="postgres")
 POSTGRES_DB = Variable.get("dwh_postgres_db", default_var="crypto_dwh")
@@ -29,18 +40,18 @@ POSTGRES_PORT = Variable.get("dwh_postgres_port", default_var="5432")
 
 args = {
     "owner": OWNER,
-    "start_date": pendulum.datetime(2026, 1, 26, tz="Europe/Moscow"),
+    "start_date": pendulum.datetime(2026, 2, 22, tz="Europe/Moscow"),
     "catchup": False,
     "retries": 3,
     "retry_delay": pendulum.duration(minutes=5),
 }
 
-def get_load_date(**context) -> str:
+def get_data_interval_start(**context) -> str:
     return context["data_interval_start"].format("YYYY-MM-DD")
 
 
 def load_s3_to_staging(**context):
-    load_date = get_load_date(**context)
+    load_date = get_data_interval_start(**context)
     logging.info(f"💻 Start staging load for date: {load_date}")
 
     engine = create_engine(
@@ -94,7 +105,9 @@ with DAG(
     concurrency=1,
     max_active_tasks=1,
     max_active_runs=1,
+    description=SHORT_DESCRIPTION,
 ) as dag:
+    dag.doc_md = LONG_DESCRIPTION
 
     start = EmptyOperator(task_id="start")
 

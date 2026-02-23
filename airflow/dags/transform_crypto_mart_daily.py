@@ -7,9 +7,20 @@ from airflow.providers.docker.operators.docker import DockerOperator
 OWNER = "n.znak"
 DAG_ID = "transform_crypto_mart_daily"
 
+LONG_DESCRIPTION = """
+# DAG: Transform daily crypto staging data into Mart layer
+This DAG performs the following steps:
+
+1. Waits for the staging data DAG `load_coingecko_staging_daily` to complete successfully.
+2. Runs dbt models to transform staging data into the Mart layer.
+3. Executes dbt tests to ensure data quality and integrity.
+"""
+
+SHORT_DESCRIPTION = "Transform daily staging data into Mart layer using dbt"
+
 default_args = {
     "owner": OWNER,
-    "start_date": pendulum.datetime(2026, 1, 26, tz="Europe/Moscow"),
+    "start_date": pendulum.datetime(2026, 2, 22, tz="Europe/Moscow"),
     "retries": 2,
     "retry_delay": pendulum.duration(minutes=5),
 }
@@ -21,7 +32,9 @@ with DAG(
     default_args=default_args,
     max_active_runs=1,
     tags=["dbt", "mart", "transform"],
+    description=SHORT_DESCRIPTION,
 ) as dag:
+    dag.doc_md = LONG_DESCRIPTION
 
     start = EmptyOperator(task_id="start")
 

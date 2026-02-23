@@ -16,11 +16,9 @@ LAYER = "raw"
 SOURCE = "coingecko"
 BUCKET = "prod"
 
-# MinIO
 ACCESS_KEY = Variable.get("MINIO_ACCESS_KEY", default_var="aZzwPOxDKLSbA4SJmxjH")
 SECRET_KEY = Variable.get("MINIO_SECRET_KEY", default_var="hrh9KUgEoVkE2MKOCkAexPH023M3ZCqaohZ8VwPh")
 
-# CoinGecko
 COINS = [
     "bitcoin", "ethereum", "solana", "cardano", "tron",
     "chainlink", "tether", "hyperliquid", "stellar", "monero"
@@ -29,17 +27,19 @@ API_KEY = Variable.get("COINGECKO_API_KEY", default_var="CG-3CdQVAQ59QkQrKzSiLVu
 
 LONG_DESCRIPTION = """
 # DAG: Load daily crypto data from CoinGecko into MinIO
-- Получение данных о 10 монетах
-- Сохранение в S3/MinIO в Parquet через DuckDB
-- Проверка структуры данных
-- Логирование количества строк
+
+This DAG performs the following steps:
+1. Fetches daily market data for 10 selected cryptocurrencies from the CoinGecko API.
+2. Normalizes the data and adds a load date.
+3. Writes the resulting dataset in Parquet format to MinIO/S3 via DuckDB.
+4. Logs the number of records processed for monitoring.
 """
 
-SHORT_DESCRIPTION = "Load daily CoinGecko raw data into MinIO"
+SHORT_DESCRIPTION = "Fetch daily CoinGecko market data and store in MinIO"
 
 args = {
     "owner": OWNER,
-    "start_date": pendulum.datetime(2026, 1, 26, tz="Europe/Moscow"),
+    "start_date": pendulum.datetime(2026, 2, 22, tz="Europe/Moscow"),
     "catchup": False,
     "retries": 3,
     "retry_delay": pendulum.duration(minutes=5),

@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y git curl && \
 
 WORKDIR /dbt
 
-COPY . /dbt
+COPY dbt/ /dbt/
 
 ENV DBT_PROFILES_DIR=/dbt/.dbt
 
